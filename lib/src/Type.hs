@@ -5,11 +5,13 @@ module Type where
 import qualified Data.Map as Map
 import Data.Map (Map)
 
-newtype NodeId = NodeId { unNodeId :: Int }
-               deriving (Eq, Show, Read)
+newtype NodeId =
+  NodeId { unNodeId :: Int }
+  deriving (Eq, Ord, Show, Read)
                         
-newtype EdgeId = EdgeId { unEdgeId :: Int }
-               deriving (Eq, Show, Read)
+newtype EdgeId =
+  EdgeId { unEdgeId :: Int }
+  deriving (Eq, Ord, Show, Read)
 
 
 data Edge = Edge {
@@ -42,13 +44,16 @@ empty = Graph Map.empty Map.empty
 addNode :: NodeId -> Node -> Graph -> Graph
 addNode nodeId node g = g { nodes = Map.insert nodeId node (nodes g) }
 
-addEdge :: EdgeId -> Edge -> Graph -> Graph
-addEdge edgeId edge g = g { edges = Map.insert edgeId edge (edges g) }
+addEdge :: EdgeId -> Edge -> Graph -> Maybe Graph
+addEdge edgeId edge@(Edge f t) g =
+  case (Map.lookup f (nodes g), Map.lookup t (nodes g)) of
+   (Just _, Just _) -> Just (g { edges = Map.insert edgeId edge (edges g) })
+   _ -> Nothing
 
 diff :: Graph -> Graph -> Graph
 diff g h = Graph {
   nodes = nodes g Map.\\ nodes h
-  , eges = edges g map.\\ edges g
+  , edges = edges g Map.\\ edges g
   }
 
 patch :: Graph -> Graph -> Graph
