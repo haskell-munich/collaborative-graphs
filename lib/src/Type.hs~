@@ -1,0 +1,9 @@
+
+
+module Type where
+
+
+
+newtype NodeId = NodeId { unNodeId :: Int }
+
+
