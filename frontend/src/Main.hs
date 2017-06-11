@@ -16,12 +16,14 @@ import GHC.Generics (Generic)
 
 import React.Flux
 
-import qualified Type as T
+import qualified Graph as T
 
-data Action = Click
+data Action = Click deriving Generic
+
+instance NFData Action
 
 data AppState = AppState {
-  graph :: Graph
+  graph :: T.Graph
   }
 
 store :: ReactStore AppState
@@ -35,7 +37,7 @@ instance StoreData AppState where
 
   transform Click state = return state
 
-key :: String -> [_] -> [_]
+key :: String -> [PropertyOrHandler handler] -> [PropertyOrHandler handler]
 key str = (("key" $= str) :)
 
 render :: AppState -> ReactElementM ViewEventHandler ()

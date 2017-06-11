@@ -1,0 +1,5 @@
+frontend/.cabal-sandbox/
+frontend/cabal.sandbox.config
+frontend/dist/
+lib/dist/
+*~
