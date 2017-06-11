@@ -50,12 +50,15 @@ addEdge edgeId edge@(Edge f t) g =
    (Just _, Just _) -> Just (g { edges = Map.insert edgeId edge (edges g) })
    _ -> Nothing
 
+
+-- TODO: only returns added nodes and edges; should return some kind of "patch"
 diff :: Graph -> Graph -> Graph
 diff g h = Graph {
   nodes = nodes g Map.\\ nodes h
   , edges = edges g Map.\\ edges g
   }
 
+-- TODO: patch should take some kind of patch and apply it.
 patch :: Graph -> Graph -> Graph
 patch g diff = Graph {
   nodes = nodes g `Map.union` nodes diff
